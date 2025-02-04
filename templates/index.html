@@ -3,11 +3,15 @@
 {% block content %}
 
     <script src="/static/script/canvas.js" defer></script>
+    <script src="/static/script/ecommerce.js" defer></script>
+
     <!-- defer serve a fare in modo che il codice js venga invocato
     solo dopo che è completamente caricata la pagina html -->
 
     <h1>Welcome to the Homepage</h1>
+    <p>Here you can find some multimedia examples and the Magical Things Shop.</p>
     <p>Don't make too many questions.</p>
+    <p>Il sito è mezzo in italiano e mezzo in inglese, but hey, who the fuck cares?</p>
     <div class="center">
       <p><b>Just listen.</b></p>
       <iframe src="https://www.youtube.com/embed/tgbNymZ7vqY"></iframe>
@@ -15,4 +19,21 @@
       <p><b>Here you go a simple exaple of a canvas.</b></p>
       <canvas id="myCanvas" width="400" height="300" style="border:1px solid #000000;"></canvas>
     </div>
+
+    <h1 class="demoFont">The Magical Things Shop</h1>
+    <div class="product-container">
+        {% for product in products_data %}
+        <div class="product-card">
+            <img src="{{ url_for('static', filename=product.Image)}}" alt={{ product.Name }}>
+            <h2>{{ product.Name }}</h2>
+            <p class="price"> {{ product.Price }} </p>
+            <p class="category"> {{ product.Category }} </p>
+            <button class="toggle-details">Mostra dettagli</button>
+            <div class="details hidden">
+                <p> {{ product.Details }} </p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
 {% endblock %}

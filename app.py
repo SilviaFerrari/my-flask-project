@@ -40,10 +40,27 @@ def load_books_data():
     except Exception as e:
         print(f"Warning: {csv_path} not found!")
         return []
+
+def load_products_data():
+    products_data = []
+    csv_path = os.path.join(os.path.dirname(__file__), 'static/products.csv')
+    try:
+        with open(csv_path, mode='r', encoding='utf-8') as csv_file:
+            csv_reader = csv.DictReader(csv_file)
+            for row in csv_reader:
+                products_data.append(row)
+            return products_data
+    except FileNotFoundError:
+        print(f"Warning: {csv_path} not found!")
+        return []
+    except Exception as e:
+        print(f"Warning: {csv_path} not found!")
+        return []
 app = Flask(__name__)
 @app.route('/') #home page
 def index():
-    return render_template('index.html')
+    products_data = load_products_data()
+    return render_template('index.html', products_data=products_data)
 
 @app.route('/contact')
 def contact():
