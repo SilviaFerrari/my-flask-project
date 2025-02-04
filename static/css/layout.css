@@ -91,7 +91,7 @@ label {
   margin-bottom: 8px;
 }
 
-input[type="text"], input[type="password"], input[type="email"],  select {
+input[type="text"], input[type="password"], input[type="email"], input[type="file"],  select {
   padding: 10px;
   margin-bottom: 20px;
   border: 1px solid #ccc;

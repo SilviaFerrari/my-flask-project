@@ -36,4 +36,32 @@
         {% endfor %}
     </div>
 
+    <div class="registration-container">
+    <h2>Aggiungi prodotto</h2>
+
+    <form action="https://httpbin.org/post" method="post">
+
+      <label for="product-name">Nome prodotto:</label>
+      <input type="text" id="product-name" name="product-name" placeholder="Inserisci il nome del prodotto" required>
+
+      <label for="product-price">Prezzo prodotto:</label>
+      <input type="text" id="product-price" name="product-price" placeholder="Inserisci il presso del prodotto" required>
+
+      <label for="product-category">Categoria prodotto:</label>
+      <input type="text" id="product-category" name="product-category" placeholder="Inserisci la categoria del prodotto" required>
+
+      <label for="product-image">Carica immagine:</label>
+      <input type="file" id="product-image" name="product-image" placeholder="Scegli immagine">
+
+      <label for="product-details">Dettagli prodotto:</label>
+      <textarea id="product-details" name="product-details" rows="8" cols="30">Scrivi qui</textarea>
+
+      <div class="align-button">
+          <button type="submit">Aggiungi</button>
+          <button type="reset">Resetta</button>
+      </div>
+
+    </form>
+  </div>
+
 {% endblock %}
