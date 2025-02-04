@@ -1,0 +1,119 @@
+/* NAVBAR */
+
+.navbar {
+    background-color: #2c3e50;
+    color: white;
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.nav-links {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.nav-links a:hover {
+    background-color: #34495e;
+    transform: scale(1.05);
+}
+
+.nav-links a.active {
+    background-color: #1abc9c;
+    color: white;
+}
+
+/* BODY */
+body {
+    font-family: Lexend, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
+    justify-content: center;     /* Centra orizzontalmente */
+    align-items: center;         /* Centra verticalmente */
+    height: 100vh;               /* Altezza = viewport */
+}
+
+main {
+    padding: 2rem;
+    text-align: center;
+}
+
+h1 {
+    color: #312d67;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+h3 {
+    color: #000000;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+
+p {
+    text-align: center;
+    margin: 20px;
+}
+img{
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    padding: 5px;
+    width: 300px;
+}
+
+.center {
+    margin: 0 auto;
+    width: auto;
+    align-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+iframe, canvas {
+    border: 2px solid #333;
+    width: 300px;
+    height: 200px;
+}
+
+/* FOOTER */
+
+footer {
+    background-color: #2c3e50; /* Same as navbar */
+    color: white;
+    text-align: center;
+    padding: 1rem;
+    margin-top: 2rem;
+    font-size: 0.9rem;
+    border-top: 2px solid #34495e;
+}
+
+footer a {
+    color: #1abc9c;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+footer a:hover {
+    color: #16a085; /* Slightly darker green */
+}
