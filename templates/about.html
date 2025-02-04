@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+
+<script src="/static/script/books.js" defer></script>
+
+<h1>About Us</h1>
+<p>This is the about page.</p>
+<table>
+    <caption>
+        <em>Take a look to </em>
+        <a href="https://it.wikipedia.org/wiki/Colore_degli_occhi">this resources</a>
+    </caption>
+    <tr>
+        <th rowspan="2"></th>
+        <th colspan="2">Average</th>
+        <th rowspan="2">Red<br/>eyes</th>
+    </tr>
+    <tr>
+        <th>height</th><th>weight</th>
+    </tr>
+    <tr>
+        <th>Males</th><td>1.9</td><td>0.003</td><td>40%</td>
+    </tr>
+    <tr>
+        <th>Females</th><td>1.7</td><td>0.002</td><td>43%</td>
+    </tr>
+</table>
+
+<h1>Our library</h1>
+<section class="image-gallery">
+  <div class="registration-container, image-item">
+    <h3>Aggiungi un libro</h3>
+    <form id="addBookForm">
+
+      <!-- Title -->
+      <label for="addTitle">Titolo:</label>
+      <input type="text" id="addTitle" name="addTitle" placeholder="Inserisci il titolo" required>
+
+      <!-- Author -->
+      <label for="addAuthor">Autore:</label>
+      <input type="text" id="addAuthor" name="addAuthor" placeholder="Inserisci l'autore" required>
+
+      <!-- Genre -->
+      <label for="addGenre">Genere:</label>
+      <input type="text" id="addGenre" name="addGenre" placeholder="Inserisci il genere" required>
+
+      <!-- Height -->
+      <label for="addHeight">Pagine:</label>
+      <input type="text" id="addHeight" name="addHeight" placeholder="Inserisci le pagine" required>
+
+      <!-- Publisher -->
+      <label for="addPublisher">Casa editrice:</label>
+      <input type="text" id="addPublisher" name="addPublisher" placeholder="Inserisci la casa editrice" required>
+
+      <!-- Submit Button -->
+      <div class="align-button">
+          <button type="submit">Aggiungi</button>
+          <button type="reset">Reset</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="registration-container, image-item">
+    <h3>Elimina un libro</h3>
+    <form id="removeBookForm">
+
+      <!-- Title -->
+      <label for="removeTitle">Titolo:</label>
+      <input type="text" id="removeTitle" name="removeTitle" placeholder="Inserisci il titolo" required>
+
+      <!-- Author -->
+      <label for="removeAuthor">Autore:</label>
+      <input type="text" id="removeAuthor" name="removeAuthor" placeholder="Inserisci l'autore">
+
+      <!-- Genre -->
+      <label for="removeGenre">Genere:</label>
+      <input type="text" id="removeGenre" name="removeGenre" placeholder="Inserisci il genere">
+
+      <!-- Height -->
+      <label for="removeHeight">Pagine:</label>
+      <input type="text" id="removeHeight" name="removeHeight" placeholder="Inserisci le pagine">
+
+      <!-- Publisher -->
+      <label for="removePublisher">Casa editrice:</label>
+      <input type="text" id="removePublisher" name="removePublisher" placeholder="Inserisci la casa editrice">
+
+      <!-- Submit Button -->
+      <div class="align-button">
+          <button type="submit">Elimina</button>
+          <button type="reset">Reset</button>
+      </div>
+    </form>
+  </div>
+</section>
+
+    <table>
+  <tr>
+    <th>Title</th>
+    <th>Author</th>
+    <th>Genre</th>
+    <th>Height</th>
+    <th>Publisher</th>
+  </tr>
+  {% for book in books_data %}
+  <tr>
+    <td>{{ book.Title }}</td>
+    <td>{{ book.Author }}</td>
+    <td>{{ book.Genre }}</td>
+    <td>{{ book.Height }}</td>
+    <td>{{ book.Publisher }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+    <div class="registration-container">
+    <h1>Cerca un libro</h1>
+    <form id="searchBookForm">
+        <label for="searchTitle">Titolo:</label>
+        <input type="text" id="searchTitle" placeholder="Inserisci il titolo">
+
+        <label for="searchAuthor">Autore:</label>
+        <input type="text" id="searchAuthor" placeholder="Inserisci l'autore">
+
+        <button type="submit">Cerca</button>
+    </form>
+
+    <table id="resultsTable"></table>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+
+    <script src="/static/script/canvas.js" defer></script>
+    <!-- defer serve a fare in modo che il codice js venga invocato
+    solo dopo che è completamente caricata la pagina html -->
+
+    <h1>Welcome to the Homepage</h1>
+    <p>Don't make too many questions.</p>
+    <div class="center">
+      <p><b>Just listen.</b></p>
+      <iframe src="https://www.youtube.com/embed/tgbNymZ7vqY"></iframe>
+      <br>
+      <p><b>Here you go a simple exaple of a canvas.</b></p>
+      <canvas id="myCanvas" width="400" height="300" style="border:1px solid #000000;"></canvas>
+    </div>
+{% endblock %}

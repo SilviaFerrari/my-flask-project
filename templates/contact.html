@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+
+    <h1>Contact Us</h1>
+    <p>You can contact us at:</p>
+    <p>example@email.com</p>
+
+    <!--
+         Usiamo il metodo post perchè dobbiamo inviare una password
+         infatti get è meno sicuro di post e ci conviene inviare i dati
+         nel body. La get passa i parametri al server attravero l'URL
+         che è completamente visibile. Il GET ha una lunghezza massima,
+         ma spesso i form sono molto lunghi. Invece con POST possiamo
+         inviare tutti i dati che vogliamo nel body.
+
+         httpbin ci restituisce i dati che gli abbiamo inviato.
+         Ha anche tutta una serie di proprietà. Gli unici scenari in cui
+         ha senso mandare dei form con la GET è quando dobbiamo aprire
+         una pagina di un sito esterno, quindi una ricerca, oppure dei
+         segnalibri (quando i browser ci salvano certe ricerche).
+    -->
+    <div class="registration-container">
+    <h2>Registrazione Utente</h2>
+
+    <form action="https://httpbin.org/post" method="post">
+
+      <!-- Username -->
+      <label for="username">Nome Utente:</label>
+      <input type="text" id="username" name="username" placeholder="Inserisci il nome utente" required>
+
+      <!-- Password -->
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" placeholder="Inserisci la password" required>
+
+      <!-- Password -->
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" placeholder="Inserisci la email" required>
+
+      <!-- Gender (Radio Button) -->
+        <!--
+             Notiamo che i radio hanno tutti lo stesso nome
+             quindi di comportano come se fossero un unico input
+             è molto importante per il modo in cui i dati vengono inviati e gestiti dal server
+        -->
+      <label>Genere:</label>
+      <div class="radio-group">
+        <label><input type="radio" name="gender" value="male" required> Maschio</label>
+        <label><input type="radio" name="gender" value="female" required> Femmina</label>
+        <label><input type="radio" name="gender" value="other" required> Altro</label>
+      </div>
+
+      <!-- Interests (Checkbox) -->
+      <label>Interessi:</label>
+      <div class="checkbox-group">
+        <label><input type="checkbox" name="interests" value="sport"> Sport</label>
+        <label><input type="checkbox" name="interests" value="music"> Musica</label>
+        <label><input type="checkbox" name="interests" value="technology"> Tecnologia</label>
+        <label><input type="checkbox" name="interests" value="travel"> Viaggi</label>
+        <label><input type="checkbox" name="interests" value="culture"> Cultura</label>
+      </div>
+
+      <!-- Country (Select Dropdown) -->
+      <label for="country">Paese:</label>
+      <select id="country" name="country" required>
+        <option value="">Seleziona il tuo paese</option>
+        <option value="italy">Italia</option>
+        <option value="usa">Stati Uniti</option>
+        <option value="france">Francia</option>
+        <option value="germany">Germania</option>
+        <option value="belgium">Belgio</option>
+        <option value="other">Altro</option>
+      </select>
+
+      <!-- Esempio di lista a scelta multipla -->
+      <label for="provincia">Provincia:</label>
+      <select name="provincia" multiple="multiple" size=7>
+        <optgroup label="Teoscana">
+            <option value="AR">Arezzo</option>
+            <option value="GR">Grosseto</option>
+            <option value="LI">Livorno</option>
+            <option value="LU">Lucca</option>
+        </optgroup>
+        <optgroup label="Emilia Romagna">
+            <option value="BO" selected="selected">Bologna</option>
+            <option value="MO">Modena</option>
+            <option value="RE">Reggio Emilia</option>
+            <option value="PR">Parma</option>
+            <option value="PC">Piacenza</option>
+        </optgroup>
+      </select>
+
+      <label for="notes">Eventuali note:</label>
+      <textarea name="notes" rows="8" cols="30">Scrivi qui</textarea>
+
+      <!-- Submit Button -->
+      <div class="align-button">
+          <button type="submit">Registrati</button>
+          <button type="reset">Resetta</button>
+      </div>
+
+    </form>
+  </div>
+
+{% endblock %}
