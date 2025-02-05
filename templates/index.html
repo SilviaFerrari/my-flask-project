@@ -4,6 +4,8 @@
 
     <script src="/static/script/canvas.js" defer></script>
     <script src="/static/script/ecommerce.js" defer></script>
+    <script src="/static/script/math_rollover.js" defer></script>
+
 
     <!-- defer serve a fare in modo che il codice js venga invocato
     solo dopo che è completamente caricata la pagina html -->
@@ -17,6 +19,50 @@
         <div class="image-item">
             <p><b>Esempio di un canvas</b></p>
             <canvas id="myCanvas" width="400" height="300" style="border:1px solid #000000;"></canvas>
+        </div>
+    </div>
+
+    <h1>Facciamo qualche calcolo</h1>
+	<div class="container">
+		<p>Inserisci il risultato della seguente espressione:</p>
+		<form id="calculator">
+			<input disabled="disabled" type="text" name="op1" size="15" >+
+			<input disabled="disabled" type="text" name="op2" size="15" >=
+			<input type="text" name="sum" size="15">
+
+			<input type="button" value="Verifica" onClick="compute_string(this.form); compute_int(this.form)">
+			<p>Risultato stringa:</p>
+			<input type="text" name="string_out" disabled="disabled"/>
+			<p>Risultato numerico:</p>
+			<input type="text" name="int_out" disabled="disabled"/>
+		</form>
+    </div>
+
+    <h1>Effetto Rollover</h1>
+    <div class="image-gallery">
+        <div class="product-card">
+            <p> Rollover CSS e HTML (solo con pseudo-classi) causa parecchi problemi!</p>
+        </div>
+
+        <div class="product-card">
+            <img src="/static/images/mouse_out.gif" alt="Image not found"
+               onMouseOver="this.src = '/static/images/mouse_over.gif';"
+               onMouseOut="this.src = '/static/images/mouse_out.gif';"/>
+            <p> Rollover DOM ed eventi DHTML</p>
+        </div>
+
+        <div class="product-card">
+            <img src="/static/images/mouse_out.gif" id="rolloverImageId" alt="Image not found"
+               onMouseOver="rollImageById(this.id,'/static/images/mouse_over.gif');"
+               onMouseOut="rollImageById(this.id,'/static/images/mouse_out.gif');"/>
+            <p>Rollover con Javascript ha il vantaggio di essere riutilizzabile. E' il metodo migliore. </p>
+        </div>
+
+        <div class="product-card">
+            <img src="/static/images/mouse_out.gif" name="rollingImageName" alt="Image not found"
+               onMouseOver="rollImageByName(this.name,'../images/mouse_over.gif');"
+               onMouseOut="rollImageByName(this.name,'../images/mouse_out.gif');"/>
+            <p> Altro modo con js, più complicato dell'altro e meno efficace.</p>
         </div>
     </div>
 

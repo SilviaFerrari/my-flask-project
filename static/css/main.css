@@ -80,6 +80,11 @@ img{
     width: 300px;
 }
 
+iframe, canvas {
+    height: 300px;
+    width: 500px;
+}
+
 .center {
     margin: 0 auto;
     width: auto;
@@ -88,9 +93,16 @@ img{
     text-align: center;
 }
 
-iframe, canvas {
-    height: 300px;
-    width: 500px;
+.container {
+    width: 50%;
+    margin: 0 auto;
+    align-items: center;
+}
+
+.container form{
+    width: 20%;
+    margin: 0 auto;
+    align-items: center;
 }
 
 /* FOOTER */
