@@ -5,11 +5,13 @@ from flask import Flask, render_template, request, jsonify
 import csv
 import os.path
 
-# load team members from csv
+#
+# FUNZIONI PER CARICARE DATI DA DEI FILE CSV
+#
 
 def load_team_data():
     team_members = []
-    csv_path = os.path.join(os.path.dirname(__file__), 'static/team.csv')
+    csv_path = os.path.join(os.path.dirname(__file__), 'data/team.csv')
     try:
         with open(csv_path, mode='r', encoding='utf-8') as csv_file:
             csv_reader = csv.DictReader(csv_file)
@@ -17,17 +19,15 @@ def load_team_data():
                 team_members.append(row)
             return team_members
     except FileNotFoundError:
-        print(f"Warning: {csv_path} not found!")
+        print(f"File non trovato: {csv_path}")
         return []
     except Exception as e:
-        print(f"Warning: {csv_path} not found!")
+        print(f"Errore imprevisto durante la lettura di {csv_path}: {e}")
         return []
-
-# load books data from csv
 
 def load_books_data():
     books_data = []
-    csv_path = os.path.join(os.path.dirname(__file__), 'static/books.csv')
+    csv_path = os.path.join(os.path.dirname(__file__), 'data/books.csv')
     try:
         with open(csv_path, mode='r', encoding='utf-8') as csv_file:
             csv_reader = csv.DictReader(csv_file)
@@ -35,15 +35,15 @@ def load_books_data():
                 books_data.append(row)
             return books_data
     except FileNotFoundError:
-        print(f"Warning: {csv_path} not found!")
+        print(f"File non trovato: {csv_path}")
         return []
     except Exception as e:
-        print(f"Warning: {csv_path} not found!")
+        print(f"Errore imprevisto durante la lettura di {csv_path}: {e}")
         return []
 
 def load_products_data():
     products_data = []
-    csv_path = os.path.join(os.path.dirname(__file__), 'static/products.csv')
+    csv_path = os.path.join(os.path.dirname(__file__), 'data/products.csv')
     try:
         with open(csv_path, mode='r', encoding='utf-8') as csv_file:
             csv_reader = csv.DictReader(csv_file)
@@ -51,16 +51,19 @@ def load_products_data():
                 products_data.append(row)
             return products_data
     except FileNotFoundError:
-        print(f"Warning: {csv_path} not found!")
+        print(f"File non trovato: {csv_path}")
         return []
     except Exception as e:
-        print(f"Warning: {csv_path} not found!")
+        print(f"Errore imprevisto durante la lettura di {csv_path}: {e}")
         return []
+
+#
+# ROUTE DELLE PAGINE HTML
+#
 app = Flask(__name__)
 @app.route('/') #home page
 def index():
-    products_data = load_products_data()
-    return render_template('index.html', products_data=products_data)
+    return render_template('index.html')
 
 @app.route('/contact')
 def contact():
@@ -69,14 +72,17 @@ def contact():
 @app.route('/team')
 def team():
     team_members = load_team_data()
-    return render_template('team.html', team_members=team_members)
+    products_data = load_products_data()
+    return render_template('team.html', products_data=products_data, team_members=team_members)
 
 @app.route('/about') # contains also the books list
 def about():
     books_data = load_books_data()
     return render_template('about.html', books_data=books_data)
 
-
+#
+# FUNZIONALITA' API
+#
 
 @app.route('/api/books', methods=['GET'])
 def api_books():

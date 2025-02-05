@@ -23,4 +23,51 @@
         <div class="box box3">Box 3</div>
     </div>
 
+    <h1 class="demoFont">Titolo con gradient</h1>
+    <h3>Esempio di cards con testo nascosto</h3>
+    <div class="product-container">
+        {% for product in products_data %}
+        <div class="product-card">
+            <img src="{{ url_for('static', filename=product.Image)}}" alt={{ product.Name }}>
+            <h2>{{ product.Name }}</h2>
+            <p class="price"> {{ product.Price }} </p>
+            <p class="category"> {{ product.Category }} </p>
+            <button class="toggle-details">Mostra dettagli</button>
+            <div class="details hidden">
+                <p> {{ product.Details }} </p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!--
+    <div class="registration-container">
+    <h2>Aggiungi prodotto</h2>
+
+    <form id="addProductForm">
+
+      <label for="product-name">Nome prodotto:</label>
+      <input type="text" id="product-name" name="product-name" placeholder="Inserisci il nome del prodotto" required>
+
+      <label for="product-price">Prezzo prodotto:</label>
+      <input type="number" id="product-price" name="product-price" step="1" placeholder="Inserisci il presso del prodotto" required>
+
+      <label for="product-category">Categoria prodotto:</label>
+      <input type="text" id="product-category" name="product-category" placeholder="Inserisci la categoria del prodotto" required>
+
+      <label for="product-image">Carica immagine:</label>
+      <input type="file" id="product-image" name="product-image" placeholder="Scegli immagine">
+
+      <label for="product-details">Dettagli prodotto:</label>
+      <textarea id="product-details" name="product-details" rows="8" cols="30">Scrivi qui</textarea>
+
+      <div class="align-button">
+          <button type="submit">Aggiungi</button>
+          <button type="reset">Resetta</button>
+      </div>
+
+    </form>
+  </div>
+    -->
+
 {% endblock %}

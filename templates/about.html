@@ -2,32 +2,69 @@
 {% block title %}Home{% endblock %}
 {% block content %}
 
-<script src="/static/script/books.js" defer></script>
+    <script src="/static/script/books.js" defer></script>
 
-<h1>About Us</h1>
-<p>This is the about page.</p>
-<table>
-    <caption>
-        <em>Take a look to </em>
-        <a href="https://it.wikipedia.org/wiki/Colore_degli_occhi">this resources</a>
-    </caption>
-    <tr>
-        <th rowspan="2"></th>
-        <th colspan="2">Average</th>
-        <th rowspan="2">Red<br/>eyes</th>
-    </tr>
-    <tr>
-        <th>height</th><th>weight</th>
-    </tr>
-    <tr>
-        <th>Males</th><td>1.9</td><td>0.003</td><td>40%</td>
-    </tr>
-    <tr>
-        <th>Females</th><td>1.7</td><td>0.002</td><td>43%</td>
-    </tr>
-</table>
+    <h1>About Us</h1>
+    <div class="center">
+        <a href="https://it.wikipedia.org/wiki/Colore_degli_occhi">Esempio di un link esterno.</a>
+    </div>
+    <table>
+        <caption>
+            <h3>Esempio di una tabella con colonne e righe unite.</h3>
+        </caption>
+        <tr>
+            <th rowspan="2"></th>
+            <th colspan="2">Average</th>
+            <th rowspan="2">Red<br/>eyes</th>
+        </tr>
+        <tr>
+            <th>height</th><th>weight</th>
+        </tr>
+        <tr>
+            <th>Males</th><td>1.9</td><td>0.003</td><td>40%</td>
+        </tr>
+        <tr>
+            <th>Females</th><td>1.7</td><td>0.002</td><td>43%</td>
+        </tr>
+    </table>
 
-<h1>Our library</h1>
+    <h1>Our library</h1>
+
+    <table>
+      <tr>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Genre</th>
+        <th>Height</th>
+        <th>Publisher</th>
+      </tr>
+      {% for book in books_data %}
+      <tr>
+        <td>{{ book.Title }}</td>
+        <td>{{ book.Author }}</td>
+        <td>{{ book.Genre }}</td>
+        <td>{{ book.Height }}</td>
+        <td>{{ book.Publisher }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+
+    <div class="registration-container">
+    <h1>Cerca un libro</h1>
+    <form id="searchBookForm">
+        <label for="searchTitle">Titolo:</label>
+        <input type="text" id="searchTitle" placeholder="Inserisci il titolo">
+
+        <label for="searchAuthor">Autore:</label>
+        <input type="text" id="searchAuthor" placeholder="Inserisci l'autore">
+
+        <div class="center">
+            <button type="submit">Cerca</button>
+        </div>
+    </form>
+    </div>
+        <table id="resultsTable"></table>
+
 <section class="form-gallery">
   <div class="form-item">
     <h3>Aggiungi un libro</h3>
@@ -93,38 +130,5 @@
     </form>
   </div>
 </section>
-
-    <table>
-  <tr>
-    <th>Title</th>
-    <th>Author</th>
-    <th>Genre</th>
-    <th>Height</th>
-    <th>Publisher</th>
-  </tr>
-  {% for book in books_data %}
-  <tr>
-    <td>{{ book.Title }}</td>
-    <td>{{ book.Author }}</td>
-    <td>{{ book.Genre }}</td>
-    <td>{{ book.Height }}</td>
-    <td>{{ book.Publisher }}</td>
-  </tr>
-  {% endfor %}
-</table>
-
-    <div class="registration-container">
-    <h1>Cerca un libro</h1>
-    <form id="searchBookForm">
-        <label for="searchTitle">Titolo:</label>
-        <input type="text" id="searchTitle" placeholder="Inserisci il titolo">
-
-        <label for="searchAuthor">Autore:</label>
-        <input type="text" id="searchAuthor" placeholder="Inserisci l'autore">
-
-        <button class="align-button" type="submit">Cerca</button>
-    </form>
-    </div>
-        <table id="resultsTable"></table>
 
 {% endblock %}

@@ -2,6 +2,8 @@
 {% block title %}Home{% endblock %}
 {% block content %}
 
+    <script src="/static/script/form.js" defer></script>
+
     <h1>Contact Us</h1>
     <p>You can contact us at:</p>
     <p>example@email.com</p>
@@ -20,6 +22,7 @@
          una pagina di un sito esterno, quindi una ricerca, oppure dei
          segnalibri (quando i browser ci salvano certe ricerche).
     -->
+    <h3>Esempio di un form completo di tutti campi possibili.</h3>
     <div class="registration-container">
     <h2>Registrazione Utente</h2>
 
@@ -97,6 +100,88 @@
       <textarea name="notes" rows="8" cols="30">Scrivi qui</textarea>
 
       <!-- Submit Button -->
+      <div class="align-button">
+          <button type="submit">Registrati</button>
+          <button type="reset">Resetta</button>
+      </div>
+
+    </form>
+  </div>
+
+    <h3>Esempio di un form con controllo dei dati lato JAVASCRIPT.</h3>
+
+    <div class="registration-container">
+    <h2>Registrazione Utente</h2>
+
+    <form id="js_check_form" action="https://httpbin.org/post" method="post">
+
+      <!-- Username -->
+      <label for="js_username">Nome Utente:</label>
+      <input type="text" id="js_username" name="js_username" placeholder="Inserisci il nome utente" required>
+
+      <!-- Password -->
+      <label for="js_password">Password:</label>
+      <input type="password" id="js_password" name="js_password" placeholder="Inserisci la password" required>
+
+      <!-- Email -->
+      <label for="js_email">Email:</label>
+      <input type="email" id="js_email" name="js_email" placeholder="Inserisci la email" required>
+
+       <!-- Submit Button -->
+      <div class="align-button">
+          <button type="submit">Registrati</button>
+          <button type="reset">Resetta</button>
+      </div>
+
+    </form>
+  </div>
+
+    <h3>Esempio di un form con controllo dei dati lato HTML.</h3>
+    <div class="registration-container">
+    <h2>Registrazione Utente</h2>
+
+    <form action="https://httpbin.org/post" method="POST">
+
+      <!-- Username -->
+      <label for="username">Nome Utente:</label>
+      <input type="text" id="username" name="username" placeholder="Inserisci il nome utente" required pattern="[A-Za-z\s]+">
+
+      <!-- Password -->
+      <label for="password">Password:</label>
+      <em>Minimo 8 caratteri, una maiuscola, una minuscola e un numero.</em>
+      <input type="password" id="password" name="password" placeholder="Inserisci la password" required pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}">
+
+      <!-- Email -->
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" placeholder="Inserisci la email" required>
+
+       <!-- Submit Button -->
+      <div class="align-button">
+          <button type="submit">Registrati</button>
+          <button type="reset">Resetta</button>
+      </div>
+    </form>
+
+    <h3>Esempio di un form con controllo dei dati lato PYTHON.</h3>
+    <div class="registration-container">
+    <h2>Registrazione Utente</h2>
+
+    <form action="https://httpbin.org/post" method="POST">
+
+      <!-- Username -->
+      <label for="username">Nome Utente:</label>
+      <input type="text" id="username" name="username" placeholder="Inserisci il nome utente" required pattern="[A-Za-z\s]+">
+
+      <!-- Password -->
+      <label for="password">Password:</label>
+      <em>Minimo 8 caratteri, una maiuscola, una minuscola e un numero.</em>
+      <input type="password" id="password" name="password" placeholder="Inserisci la password" required pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}">
+
+      <!-- Email -->
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" placeholder="Inserisci la email" required>
+
+       <!-- Submit Button -->
       <div class="align-button">
           <button type="submit">Registrati</button>
           <button type="reset">Resetta</button>
