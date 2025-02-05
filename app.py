@@ -183,5 +183,34 @@ def api_remove_book():
         print(f"Errore del server: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
+#
+# FUNZIONE PYTHON PER VERIFICARE CHE I CAMPI
+# DI UN FORMAT ABBIANO LE GIUSGTE CARATTERISTICHE
+#
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    errors = []
+    if request.method == 'POST':
+        name = request.form.get('username', '').strip()
+        email = request.form.get('email', '').strip()
+        password = request.form.get('password', '').strip()
+
+        # Validazione campi
+        if not name or not email or not password:
+            return "Tutti i campi devono essere compilati."
+
+        if not name.isalpha():
+            return "Il nome deve contenere solo lettere."
+
+        if len(password) < 8 or password.islower() or password.isalpha() or password.isdigit():
+             return "La password deve avere almeno 8 caratteri, una maiuscola, una minuscola e un numero."
+
+        if "@" not in email or "." not in email:
+            return "Inserisci un'email valida."
+
+        if not errors:
+            return "Registrazione completata con successo!"
+
 if __name__ == '__main__':
     app.run(debug=True)
