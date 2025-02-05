@@ -12,11 +12,13 @@
 }
 
 .image-item img {
+    background-color: #ff5900;
     width: 250px;                               /* Larghezza fissa */
     height: 250px;                              /* Altezza fissa */
     object-fit: cover;                          /* Taglia o ridimensiona l'immagine per adattarla */
     border-radius: 50%;                         /* Immagine circolare */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);   /* Aggiunge un'ombra */
+    padding: 5px;
 }
 
 .image-item p {

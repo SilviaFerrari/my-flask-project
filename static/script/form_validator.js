@@ -8,12 +8,12 @@ async function checkForm(event){
 
     let errors = [];
 
-    // a) Verifica se tutti i campi sono compilati
+    // Verifica se tutti i campi sono compilati
     if (!name || !password || !email) {
         errors.push('Tutti i campi devono essere compilati.');
     }
 
-    // b) Verifica nome (solo caratteri alfabetici)
+    // Verifica nome (solo caratteri alfabetici)
     if (!/^[A-Za-z\s]+$/.test(name)) {
         errors.push('Il nome deve contenere solo lettere.');
     }

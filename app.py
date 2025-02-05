@@ -113,7 +113,7 @@ def search_books():
         return jsonify({"error": str(e)}), 500
 
 
-# API per aggiungere un libro con controllo dei doppioni
+# API PER AGGIUNGERE UN LIBRO CON COTROLLO DEI DOPPIONI
 @app.route('/api/books', methods=['POST'])
 def add_book_api():
     try:
@@ -145,7 +145,9 @@ def add_book_api():
         return jsonify({'error': f'An error: {str(e)}'}), 500
 
 
-# API to delete an existing book
+#
+# API PER ELIMINARE UN LIBRO
+#
 @app.route('/api/books', methods=['DELETE'])
 def api_remove_book():
     try:
