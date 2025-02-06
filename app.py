@@ -87,10 +87,11 @@ def about():
 @app.route('/api/books', methods=['GET'])
 def api_books():
     books_data = load_books_data()
+    print("Dati inviati al client:", books_data)
     return jsonify(books_data)
 
 
-# API per cercare un libro dal titolo o l'autore
+# API PER CERCARE UN LIBRO PER AUTORE O TITOLO
 @app.route('/api/books/search', methods=['GET'])
 def search_books():
     try:
@@ -103,8 +104,12 @@ def search_books():
         # Filtra i libri in base al titolo o all'autore
         filtered_books = [
             book for book in books
-            if (title_query in book["Title"].strip().lower() if title_query else True) and
-               (author_query in book["Author"].strip().lower() if author_query else True)
+            if (title_query == book["Title"].strip().lower() if title_query else True) and
+               (author_query == book["Author"].strip().lower() if author_query else True)
+
+            # guarda se title_query è contenuto nel titolo e non se sono uguali
+            #if (title_query in book["Title"].strip().lower() if title_query else True) and
+            #   (author_query in book["Author"].strip().lower() if author_query else True)
         ]
 
         return jsonify({"books": filtered_books}), 200
@@ -117,7 +122,7 @@ def search_books():
 @app.route('/api/books', methods=['POST'])
 def add_book_api():
     try:
-        add_book = request.get_json()  # Get data from the request
+        add_book = request.get_json()       # Get data from the request
         books_data = load_books_data()      # Load existing books
 
         # Validate incoming data
@@ -134,16 +139,17 @@ def add_book_api():
 
         books_data.append(add_book)
         # updating csv file
-        csv_path = os.path.join(os.path.dirname(__file__), 'static/books.csv')
+        csv_path = os.path.join(os.path.dirname(__file__), 'data/books.csv')
         with open(csv_path, mode='a', encoding='utf-8', newline='') as csv_file:
             writer = csv.DictWriter(csv_file, fieldnames=["Title", "Author", "Genre", "Height", "Publisher"])
             writer.writerow(add_book)  # Append new book
 
-        return jsonify({'message': 'Book added successfully', 'book': add_book}), 201
+        return jsonify({'books': books_data}), 201
+        #return jsonify({'books': add_book}), 201
 
     except Exception as e:
-        return jsonify({'error': f'An error: {str(e)}'}), 500
-
+        print(f"Errore del server: {str(e)}")
+        return jsonify({"error": str(e)}), 500
 
 #
 # API PER ELIMINARE UN LIBRO
@@ -168,7 +174,7 @@ def api_remove_book():
                 updated_books.append(book)  # Mantieni i libri non rimossi
 
         if removed:
-            csv_path = os.path.join(os.path.dirname(__file__), 'static/books.csv')
+            csv_path = os.path.join(os.path.dirname(__file__), 'data/books.csv')
 
             with open(csv_path, mode="w", encoding="utf-8", newline="") as csv_file:
                 fieldnames = ["Title", "Author", "Genre", "Height", "Publisher"]
@@ -176,7 +182,9 @@ def api_remove_book():
                 writer.writeheader()
                 writer.writerows(updated_books)
 
-            return jsonify({"success": "Book removed successfully"}), 200
+            return jsonify({'books': updated_books}), 201 # per tabelle dinamiche con ajax
+            #return jsonify({"success": "Book removed successfully"}), 200
+            #se usiamo tabelle statiche che vanno ricaricate
         else:
             print("Libro non trovato per la rimozione.")
             return jsonify({"error": "Book not found"}), 404

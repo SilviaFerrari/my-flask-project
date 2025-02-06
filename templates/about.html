@@ -29,7 +29,7 @@
     </table>
 
     <h1>Our library</h1>
-
+    <h3>Tabella che viene caricata dal file csv tramite HTML</h3>
     <table>
       <tr>
         <th>Title</th>
@@ -49,6 +49,9 @@
       {% endfor %}
     </table>
 
+    <h3>Tabella dei libri che viene caricata dinamicamente da ajax e js</h3>
+    <table id="booksTable"></table>
+
     <div class="registration-container">
     <h1>Cerca un libro</h1>
     <form id="searchBookForm">
@@ -63,7 +66,9 @@
         </div>
     </form>
     </div>
-        <table id="resultsTable"></table>
+
+    <!-- TABELLA CHE MOSTRA IN AUTOMATICO I LIBRI TROVATI SENZA RICARICARE LA PAGINA -->
+    <table id="resultsTable"></table>
 
 <section class="form-gallery">
   <div class="form-item">

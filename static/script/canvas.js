@@ -1,6 +1,6 @@
 // DESIGN FOR CANVAS //
 
-window.onload = function(){
+document.addEventListener("DOMContentLoaded", function() {
     const canvas = document.getElementById('myCanvas');
     const ctx = canvas.getContext('2d');
 
@@ -31,4 +31,4 @@ window.onload = function(){
     ctx.arc(50, 50, 30, 0, 2 * Math.PI);
     ctx.fillStyle = "#f1c40f";
     ctx.fill();
-}
+})

@@ -1,14 +1,34 @@
+// BOOK TABLE //
+document.addEventListener("DOMContentLoaded", async function() {
+    let response = await fetch("api/books", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    });
+
+    let result = await response.json();
+    console.log("Dati ricevuti:", result);
+
+    if(response.ok) {
+        displayBooks("booksTable", result);
+    }
+    else {
+        alert(`Error: ${result.error}`);
+    }
+});
+
 // ADD BOOK //
 document.getElementById("addBookForm").addEventListener("submit", addBook);
 
 async function addBook(event){
-    event.preventDefault() //Preventing page refreshing
+    event.preventDefault(); //Preventing page refreshing
 
-    let Title = document.getElementById("addTitle").value
-    let Author = document.getElementById("addAuthor").value
-    let Genre = document.getElementById("addGenre").value
-    let Height = document.getElementById("addHeight").value
-    let Publisher = document.getElementById("addPublisher").value
+    let Title = document.getElementById("addTitle").value;
+    let Author = document.getElementById("addAuthor").value;
+    let Genre = document.getElementById("addGenre").value;
+    let Height = document.getElementById("addHeight").value;
+    let Publisher = document.getElementById("addPublisher").value;
 
     let response = await fetch("api/books", {
         method: "POST",
@@ -16,14 +36,15 @@ async function addBook(event){
             "Content-Type": "application/json"
         },
         body: JSON.stringify({Title, Author, Genre, Height, Publisher})
-    })
+    });
 
-    let result = await response.json()
+    let result = await response.json();
     if(response.ok) {
-        alert("Book successfully added")
+        //alert("Book successfully added");
+        displayBooks("booksTable", result.books);
     }
     else {
-        alert(`Error: ${result.error}`)
+        alert(`Error: ${result.error}`);
     }
 }
 
@@ -47,7 +68,7 @@ async function searchBook(event) {
         let result = await response.json();
 
         if (response.ok) {
-            displayBooks(result.books); // Funzione per mostrare i risultati
+            displayBooks("resultsTable", result.books); // Funzione per mostrare i risultati
         } else {
             alert(`Errore: ${result.error}`);
         }
@@ -56,8 +77,40 @@ async function searchBook(event) {
     }
 }
 
-function displayBooks(books) {
-    const table = document.getElementById("resultsTable");
+// REMOVE BOOK //
+
+document.getElementById("removeBookForm").addEventListener("submit", removeBook);
+
+async function removeBook(event) {
+    event.preventDefault();
+
+    let Title = document.getElementById("removeTitle").value;
+    let Author = document.getElementById("removeAuthor").value;
+    let Genre = document.getElementById("removeGenre").value;
+    let Height = document.getElementById("removeHeight").value;
+    let Publisher = document.getElementById("removePublisher").value;
+
+    let response = await fetch("/api/books", {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({Title, Author, Genre, Height, Publisher})
+    });
+
+    let result = await response.json();
+    if (response.ok) {
+        //alert("Book successfully removed");
+        displayBooks("booksTable", result.books)
+    } else {
+        alert(`Error: ${result.error}`);
+    }
+}
+
+// DISPLAY BOOK //
+
+function displayBooks(tableId, books) {
+    const table = document.getElementById(tableId);
     table.innerHTML = ""; // Pulisce la tabella prima di mostrare i nuovi risultati
 
     if (books.length === 0) {
@@ -87,33 +140,4 @@ function displayBooks(books) {
         `;
         table.innerHTML += row;
     });
-}
-
-// REMOVE BOOK //
-
-document.getElementById("removeBookForm").addEventListener("submit", removeBook);
-
-async function removeBook(event) {
-    event.preventDefault();
-
-    let Title = document.getElementById("removeTitle").value;
-    let Author = document.getElementById("removeAuthor").value;
-    let Genre = document.getElementById("removeGenre").value;
-    let Height = document.getElementById("removeHeight").value;
-    let Publisher = document.getElementById("removePublisher").value;
-
-    let response = await fetch("/api/books", {
-        method: "DELETE",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({Title, Author, Genre, Height, Publisher})
-    });
-
-    let result = await response.json();
-    if (response.ok) {
-        alert("Book successfully removed");
-    } else {
-        alert(`Error: ${result.error}`);
-    }
 }

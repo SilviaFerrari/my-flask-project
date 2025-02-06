@@ -80,7 +80,7 @@ img{
     width: 300px;
 }
 
-iframe, canvas {
+iframe {
     height: 300px;
     width: 500px;
 }
