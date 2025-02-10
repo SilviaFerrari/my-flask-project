@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Flask React SPA</title>
   <link rel="stylesheet" href="static/css/main.css">
+  <link rel="stylesheet" href="static/css/layout.css">
   <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
   <script src="https://unpkg.com/react-router-dom@5.2.0/umd/react-router-dom.min.js"></script>
@@ -102,6 +103,188 @@
         );
     }
 
+    function Form() {
+        const [inputField, setInputField] = React.useState({
+            first_name: '',
+            last_name: '',
+            email: '',
+            gender: '',
+            hobbies: [],
+            country: ''
+        });
+
+        const [errors, setErrors] = React.useState({});
+
+        const validateInput = (name, value) => {
+            let error = "";
+
+            if (name === "first_name" || name === "last_name") {
+                if (!/^[A-Za-zÀ-ÿ\s]+$/.test(value)) {
+                    error = "Deve contenere solo lettere";
+                }
+            }
+
+            if (name === "email") {
+                if (!/^[\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$/.test(value)) {
+                    error = "Formato email non valido";
+                }
+            }
+
+            React.setErrors(prev => ({ ...prev, [name]: error }));
+        };
+
+        const inputHandler = (e) => {
+            const { name, value, type, checked } = e.target;
+
+            if (type === "checkbox") {
+                setInputField(prevState => ({
+                    ...prevState,
+                    hobbies: checked
+                        ? [...prevState.hobbies, value]
+                        : prevState.hobbies.filter(hobby => hobby !== value)
+                }));
+            } else {
+                setInputField(prevState => ({
+                    ...prevState,
+                    [name]: value
+                }));
+            }
+        };
+
+        const submitButton = async (e) => {
+            e.preventDefault();
+
+            if (Object.values(errors).some(err => err) || Object.values(inputField).some(val => val === "")) {
+                alert("Inserisci nei campi valori accettabili.");
+                return;
+            }
+
+            const response = await fetch("/api/save", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(inputField)
+            });
+
+            const data = await response.json();
+            alert(data.message);
+
+            /*
+            alert(`Nome: ${inputField.first_name}
+                    Cognome: ${inputField.last_name}
+                    Email: ${inputField.email}
+                    Genere: ${inputField.gender}
+                    Hobby: ${inputField.hobbies.join(", ")}
+                    Paese: ${inputField.country}`);
+             */
+        };
+
+        return React.createElement('div', { className: "registration-container" },
+            React.createElement('form', { onSubmit: submitButton },
+
+                // Nome
+                React.createElement('label', null, "Enter your Name",
+                    React.createElement('input', {
+                        type: "text",
+                        name: "first_name",
+                        onChange: inputHandler,
+                        placeholder: "First Name",
+                        value: inputField.first_name,
+                        required: true
+                    }),
+                    errors.first_name && React.createElement('p', { style: { color: "red" } }, errors.first_name)
+                ),
+
+                // Cognome
+                React.createElement('label', null, "Enter your Lastname",
+                    React.createElement('input', {
+                        type: "text",
+                        name: "last_name",
+                        onChange: inputHandler,
+                        placeholder: "Last Name",
+                        value: inputField.last_name,
+                        required: true
+                    }),
+                    errors.last_name && React.createElement('p', { style: { color: "red" } }, errors.last_name)
+                ),
+
+                // Email
+                React.createElement('label', null, "Enter your Email",
+                    React.createElement('input', {
+                        type: "email",
+                        name: "email",
+                        onChange: inputHandler,
+                        placeholder: "Email",
+                        value: inputField.email,
+                        required: true
+                    }),
+                    errors.email && React.createElement('p', { style: { color: "red" } }, errors.email)
+                ),
+
+                // Genere (Radio Buttons)
+                React.createElement('fieldset', null,
+                    React.createElement('legend', null, "Gender"),
+                    React.createElement('label', null,
+                        React.createElement('input', {
+                            type: "radio",
+                            name: "gender",
+                            value: "Male",
+                            onChange: inputHandler,
+                            checked: inputField.gender === "Male"
+                        }),
+                        " Male"
+                    ),
+                    React.createElement('label', null,
+                        React.createElement('input', {
+                            type: "radio",
+                            name: "gender",
+                            value: "Female",
+                            onChange: inputHandler,
+                            checked: inputField.gender === "Female"
+                        }),
+                        " Female"
+                    )
+                ),
+
+                // Hobby (Checkbox)
+                React.createElement('fieldset', null,
+                    React.createElement('legend', null, "Hobbies"),
+                    ["Reading", "Traveling", "Gaming"].map(hobby =>
+                        React.createElement('label', { key: hobby },
+                            React.createElement('input', {
+                                type: "checkbox",
+                                name: "hobbies",
+                                value: hobby,
+                                onChange: inputHandler,
+                                checked: inputField.hobbies.includes(hobby)
+                            }),
+                            ` ${hobby}`
+                        )
+                    )
+                ),
+
+                // Paese di origine (Select)
+                React.createElement('label', null, "Select your country",
+                    React.createElement('select', {
+                        name: "country",
+                        onChange: inputHandler,
+                        value: inputField.country,
+                        required: true
+                    },
+                        React.createElement('option', { value: "" }, "Select a country"),
+                        React.createElement('option', { value: "Italy" }, "Italy"),
+                        React.createElement('option', { value: "France" }, "France"),
+                        React.createElement('option', { value: "Germany" }, "Germany")
+                    )
+                ),
+
+                // Bottone Submit
+                React.createElement('button', { type: "submit", disabled: Object.values(errors).some(err => err) }, "Submit")
+            )
+        );
+    }
+
     // Componente per visualizzare i dettagli dell'evento
     function EventDetail({ match }) {
         const [event, setEvent] = React.useState(null);
@@ -152,6 +335,7 @@
                     React.createElement(Route, { exact: true, path: '/react', component: EventList }),
                     React.createElement(Route, { path: '/react/event/:eventCode', component: EventDetail })
                 ),
+                React.createElement(Form, null),
                 React.createElement(Footer, null)
             )
         );

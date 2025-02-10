@@ -5,6 +5,8 @@ from flask import Flask, render_template, request, jsonify, send_from_directory
 import csv
 import os.path
 
+app = Flask(__name__)
+
 #
 # FUNZIONE PER CARICARE DA CSV
 #
@@ -25,10 +27,48 @@ def load_csv_data(file_path):
         print(f"Errore imprevisto durante la lettura di {csv_path}: {e}")
         return []
 
+# Funzione per scrivere nel file CSV
+def write_csv_data(csv_data):
+    csv_path = os.path.join(os.path.dirname(__file__), 'data/events.csv')
+    try:
+        with open(csv_path, mode='w', newline='', encoding='utf-8') as csv_file:
+            fieldnames = ['code', 'name', 'sport', 'date', 'place', 'available_places']
+            writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(csv_data)
+    except FileNotFoundError:
+        print(f"File non trovato: {csv_path}")
+        return []
+    except Exception as e:
+        print(f"Errore durante la scrittura di {csv_path}: {e}")
+        return []
+
+# funzionche salva i dati del form di react
+@app.route("/api/save", methods=["POST"])
+def save_data():
+    data = request.json
+    csv_path = os.path.join(os.path.dirname(__file__), 'data/react_form.csv')
+
+    with open(csv_path, mode="w", newline="", encoding='utf-8') as csv_file:
+        fieldnames = ['firstName', 'lastName', 'email', 'gender', 'hobbies', 'country']
+        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+        writer.writeheader()
+
+        # Scrive i dati nel formato corretto
+        writer.writerow({
+            'firstName': data["first_name"],
+            'lastName': data["last_name"],
+            'email': data["email"],
+            'gender': data["gender"],
+            'hobbies': ", ".join(data["hobbies"]),
+            'country': data["country"]
+        })
+
+    return jsonify({"message": "Dati salvati con successo!"}), 200
+
 #
 # ROUTE DELLE PAGINE HTML
 #
-app = Flask(__name__)
 @app.route('/') #home page
 def index():
     return render_template('index.html')
@@ -57,18 +97,22 @@ def events():
     events_data = load_csv_data('data/events.csv')
     return render_template('events.html', events_data=events_data)
 
-@app.route('/events/<event_code>', methods=['GET'])
+@app.route('/events/<event_code>')
 def details(event_code):
-    events_data = load_csv_data('data/events.csv')
-    event = next((e for e in events_data if e['code'] == event_code), None)
-    if event:
-        return render_template('details.html', event=event)
-    return "Evento non trovato", 404
+    try:
+        events_data = load_csv_data('data/events.csv')
+        event = next((e for e in events_data if e['code'] == event_code), None)
 
+        if event:
+            return render_template('details.html', event=event)
+        return "Evento non trovato", 404
+
+    except Exception as e:
+        return "Errore del server", 500
 #
 # FUNZIONALITA' API
 #
-
+# Le api/events sono usate da react mentre api/booking da entrambi
 @app.route('/api/events', methods=['GET'])
 def get_events():
     events_data = load_csv_data('data/events.csv')
@@ -92,19 +136,10 @@ def book_event(event_code):
             available_places = int(event['available_places'])
             if available_places > 0:
                 event['available_places'] = available_places - 1
-                write_events(events_data)
+                write_csv_data(events_data)
                 return jsonify({'success': True, 'message': 'Posto prenotato con successo!'})
             return jsonify({'success': False, 'message': 'Posti esauriti!'}), 400
     return jsonify({'success': False, 'message': 'Evento non trovato!'}), 404
-
-# Funzione per scrivere nel file CSV
-def write_events(events_data):
-    csv_path = os.path.join(os.path.dirname(__file__), 'data/events.csv')
-    with open(csv_path, mode='w', newline='', encoding='utf-8') as csv_file:
-        fieldnames = ['code', 'name', 'sport', 'date', 'place', 'available_places']
-        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
-        writer.writeheader()
-        writer.writerows(events_data)
 
 
 # LIBRI #

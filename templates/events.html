@@ -18,8 +18,9 @@
         </thead>
         <tbody>
             {% for event in events_data %}
-            <tr onclick="window.location.href='/event/{{ event['code'] }}'">
-                <td>{{ event['name'] }}</td>
+            <!-- <tr onclick="window.location.href='/events/{{ event['code'] }}'"> -->
+            <tr>
+                <td><a href="/events/{{ event['code'] }}">{{ event['name'] }}</a></td>
                 <td>{{ event['sport'] }}</td>
                 <td>{{ event['date'] }}</td>
                 <td>{{ event['place'] }}</td>
