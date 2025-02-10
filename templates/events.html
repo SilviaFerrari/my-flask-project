@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+
+    <div class="center" >
+    <h1>Eventi diponibili</h1>
+    <h3>Tabella con prodotti che condice alle loro pagine specifiche</h3>
+    {% if events_data %}
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Sport</th>
+                <th>Data</th>
+                <th>Luogo</th>
+                <th>Posti Disponibili</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for event in events_data %}
+            <tr onclick="window.location.href='/event/{{ event['code'] }}'">
+                <td>{{ event['name'] }}</td>
+                <td>{{ event['sport'] }}</td>
+                <td>{{ event['date'] }}</td>
+                <td>{{ event['place'] }}</td>
+                <td>{{ event['available_places'] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>Nessun evento disponibile.</p>
+    {% endif %}
+    </div>
+
+{% endblock %}

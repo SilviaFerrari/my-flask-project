@@ -1,55 +1,23 @@
 # se clicchiamo sul sito dei link, vediamo su terminale le GET
 # e le rischieste con i rispettivi codici
 
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, send_from_directory
 import csv
 import os.path
 
 #
-# FUNZIONI PER CARICARE DATI DA DEI FILE CSV
+# FUNZIONE PER CARICARE DA CSV
 #
 
-def load_team_data():
-    team_members = []
-    csv_path = os.path.join(os.path.dirname(__file__), 'data/team.csv')
+def load_csv_data(file_path):
+    csv_data = []
+    csv_path = os.path.join(os.path.dirname(__file__), file_path)
     try:
         with open(csv_path, mode='r', encoding='utf-8') as csv_file:
             csv_reader = csv.DictReader(csv_file)
             for row in csv_reader:
-                team_members.append(row)
-            return team_members
-    except FileNotFoundError:
-        print(f"File non trovato: {csv_path}")
-        return []
-    except Exception as e:
-        print(f"Errore imprevisto durante la lettura di {csv_path}: {e}")
-        return []
-
-def load_books_data():
-    books_data = []
-    csv_path = os.path.join(os.path.dirname(__file__), 'data/books.csv')
-    try:
-        with open(csv_path, mode='r', encoding='utf-8') as csv_file:
-            csv_reader = csv.DictReader(csv_file)
-            for row in csv_reader:
-                books_data.append(row)
-            return books_data
-    except FileNotFoundError:
-        print(f"File non trovato: {csv_path}")
-        return []
-    except Exception as e:
-        print(f"Errore imprevisto durante la lettura di {csv_path}: {e}")
-        return []
-
-def load_products_data():
-    products_data = []
-    csv_path = os.path.join(os.path.dirname(__file__), 'data/products.csv')
-    try:
-        with open(csv_path, mode='r', encoding='utf-8') as csv_file:
-            csv_reader = csv.DictReader(csv_file)
-            for row in csv_reader:
-                products_data.append(row)
-            return products_data
+                csv_data.append(row)
+            return csv_data
     except FileNotFoundError:
         print(f"File non trovato: {csv_path}")
         return []
@@ -69,29 +37,85 @@ def index():
 def contact():
     return render_template('contact.html')
 
+@app.route('/react') #home page
+def react():
+    return send_from_directory("static", "react_index.html")
+
 @app.route('/team')
 def team():
-    team_members = load_team_data()
-    products_data = load_products_data()
+    team_members = load_csv_data('data/team.csv')
+    products_data = load_csv_data('data/products.csv')
     return render_template('team.html', products_data=products_data, team_members=team_members)
 
 @app.route('/about') # contains also the books list
 def about():
-    books_data = load_books_data()
+    books_data = load_csv_data('data/books.csv')
     return render_template('about.html', books_data=books_data)
+
+@app.route('/events')
+def events():
+    events_data = load_csv_data('data/events.csv')
+    return render_template('events.html', events_data=events_data)
+
+@app.route('/events/<event_code>', methods=['GET'])
+def details(event_code):
+    events_data = load_csv_data('data/events.csv')
+    event = next((e for e in events_data if e['code'] == event_code), None)
+    if event:
+        return render_template('details.html', event=event)
+    return "Evento non trovato", 404
 
 #
 # FUNZIONALITA' API
 #
 
+@app.route('/api/events', methods=['GET'])
+def get_events():
+    events_data = load_csv_data('data/events.csv')
+    return jsonify(events_data)
+
+@app.route('/api/event/<event_code>', methods=['GET'])
+def get_event(event_code):
+    events_data = load_csv_data('data/events.csv')
+    event = next((e for e in events_data if e['code'] == event_code), None)
+    if event:
+        return jsonify(event)
+    return jsonify({'error': 'Evento non trovato'}), 404
+
+
+# Funzione per prenotare un posto
+@app.route('/api/booking/<event_code>', methods=['POST'])
+def book_event(event_code):
+    events_data = load_csv_data('data/events.csv')
+    for event in events_data:
+        if event['code'] == event_code:
+            available_places = int(event['available_places'])
+            if available_places > 0:
+                event['available_places'] = available_places - 1
+                write_events(events_data)
+                return jsonify({'success': True, 'message': 'Posto prenotato con successo!'})
+            return jsonify({'success': False, 'message': 'Posti esauriti!'}), 400
+    return jsonify({'success': False, 'message': 'Evento non trovato!'}), 404
+
+# Funzione per scrivere nel file CSV
+def write_events(events_data):
+    csv_path = os.path.join(os.path.dirname(__file__), 'data/events.csv')
+    with open(csv_path, mode='w', newline='', encoding='utf-8') as csv_file:
+        fieldnames = ['code', 'name', 'sport', 'date', 'place', 'available_places']
+        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(events_data)
+
+
+# LIBRI #
+
 @app.route('/api/books', methods=['GET'])
 def api_books():
-    books_data = load_books_data()
-    print("Dati inviati al client:", books_data)
+    books_data = load_csv_data('data/books.csv')
     return jsonify(books_data)
 
-
 # API PER CERCARE UN LIBRO PER AUTORE O TITOLO
+# GET ci restituisce una risorsa così com'è
 @app.route('/api/books/search', methods=['GET'])
 def search_books():
     try:
@@ -99,7 +123,7 @@ def search_books():
         author_query = request.args.get('author', '').strip().lower()
 
         # Carica i dati dal CSV
-        books = load_books_data()
+        books = load_csv_data('data/books.csv')
 
         # Filtra i libri in base al titolo o all'autore
         filtered_books = [
@@ -119,11 +143,12 @@ def search_books():
 
 
 # API PER AGGIUNGERE UN LIBRO CON COTROLLO DEI DOPPIONI
+# POST va a modificare una risorsa
 @app.route('/api/books', methods=['POST'])
 def add_book_api():
     try:
-        add_book = request.get_json()       # Get data from the request
-        books_data = load_books_data()      # Load existing books
+        add_book = request.get_json()                  # Get data from the request
+        books_data = load_csv_data('data/books.csv')   # Load existing books
 
         # Validate incoming data
         if not all(key in add_book for key in ("Title", "Author", "Genre", "Height", "Publisher")):
@@ -157,7 +182,7 @@ def add_book_api():
 @app.route('/api/books', methods=['DELETE'])
 def api_remove_book():
     try:
-        books_data = load_books_data()
+        books_data = load_csv_data('data/books.csv')
         remove_book = request.get_json()
 
         removed = False
@@ -198,6 +223,8 @@ def api_remove_book():
 # DI UN FORMAT ABBIANO LE GIUSGTE CARATTERISTICHE
 #
 
+# GET mostra qualcosa così com'è
+# POST modifica una risorsa
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     errors = []

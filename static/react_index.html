@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Flask React SPA</title>
+  <link rel="stylesheet" href="static/css/main.css">
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-router-dom@5.2.0/umd/react-router-dom.min.js"></script>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="text/javascript">
+    var BrowserRouter = ReactRouterDOM.BrowserRouter;   // componente di più alto livello che racchiude il supporto di routing
+    var Route = ReactRouterDOM.Route;                   // definizione di un percorso lato client
+    var Link = ReactRouterDOM.Link;                     // collegamente ad un percorso lato client
+    var Switch = ReactRouterDOM.Switch;                 // parte della pagina soggetta al routing
+
+    // Componente Navbar
+    function Navbar() {
+        return React.createElement(
+            'nav',
+            { className: 'navbar' },
+            React.createElement('div', { className: 'nav-links' },
+                React.createElement('a', null, React.createElement('a', { href: '/' }, "Home")),
+                React.createElement('a', null, React.createElement('a', { href: '/about' }, "About")),
+                React.createElement('a', null, React.createElement('a', { href: '/team' }, "Team")),
+                React.createElement('a', null, React.createElement('a', { href: '/contact' }, "Contact")),
+                React.createElement('a', null, React.createElement('a', { href: '/events' }, "Eventi")),
+                React.createElement('a', { className: 'active' }, React.createElement(Link, { to: "/react" }, "React"))
+            )
+        );
+    }
+
+    function Footer() {
+        return React.createElement(
+            'footer', null,
+            React.createElement('p', null,"® 2024 Your Company. All rights reserved.")
+        );
+    }
+
+    // Componente per visualizzare la lista degli eventi
+    function EventList() {
+        const [events, setEvents] = React.useState([]);
+
+        React.useEffect(() => {
+            fetch('/api/events')
+                .then(response => response.json())
+                .then(data => setEvents(data))
+                .catch(error => console.error("Errore nel recuperare gli eventi:", error));
+        }, []);
+
+        const handleBooking = (eventCode) => {
+            const confirmed = window.confirm("Sei sicuro di voler prenotare un posto?");
+            if (confirmed) {
+                fetch(`/api/booking/${eventCode}`, { method: 'POST' })
+                    .then(response => response.json())
+                    .then(data => {
+                        alert(data.message);
+                        setEvents(events.map(event =>
+                            event.code === eventCode ? { ...event, available_places: event.available_places - 1 } : event
+                        ));
+                    })
+                    .catch(error => alert("Errore nella prenotazione: " + error));
+            }
+        };
+
+        return React.createElement(
+            'div',
+            null,
+            React.createElement('h1', {}, 'Eventi Disponibili'),
+            events.length > 0 ? React.createElement(
+                'table',
+                null,
+                React.createElement('thead', null,
+                    React.createElement('tr', null,
+                        React.createElement('th', null, 'Nome'),
+                        React.createElement('th', null, 'Sport'),
+                        React.createElement('th', null, 'Data'),
+                        React.createElement('th', null, 'Luogo'),
+                        React.createElement('th', null, 'Posti Disponibili'),
+                        React.createElement('th', null, '')
+                    )
+                ),
+                React.createElement('tbody', null,
+                    events.map((event) => React.createElement('tr', { key: event.code },
+                        React.createElement('td', null, React.createElement(Link, { to: `/react/event/${event.code}` }, event.name)),
+                        React.createElement('td', null, event.sport),
+                        React.createElement('td', null, event.date),
+                        React.createElement('td', null, event.place),
+                        React.createElement('td', null, event.available_places),
+                        React.createElement('td', null,
+                            React.createElement('button', {
+                                className: "book-button",
+                                onClick: () => handleBooking(event.code)
+                            }, "Prenota")
+                        )
+                    ))
+                )
+            ) : React.createElement('p', null, 'Nessun evento disponibile.')
+        );
+    }
+
+    // Componente per visualizzare i dettagli dell'evento
+    function EventDetail({ match }) {
+        const [event, setEvent] = React.useState(null);
+
+        React.useEffect(() => {
+            const eventCode = match.params.eventCode;
+            fetch(`/api/event/${eventCode}`)
+                .then(response => response.json())
+                .then(data => setEvent(data))
+                .catch(error => console.error("Errore nel recuperare i dettagli dell'evento:", error));
+        }, [match.params.eventCode]);
+
+        if (!event) {
+            return React.createElement('div', null, 'Caricamento...');
+        }
+
+        return React.createElement(
+            'div',
+            { className: "event-card" },
+            React.createElement('h1', null, event.name),
+            React.createElement('p', null,
+                React.createElement('strong', null, "Sport: "), event.sport
+            ),
+            React.createElement('p', null,
+                React.createElement('strong', null, "Data: "), event.date
+            ),
+            React.createElement('p', null,
+                React.createElement('strong', null, "Luogo: "), event.place
+            ),
+            React.createElement('p', null,
+                React.createElement('strong', null, "Posti Disponibili: "), event.available_places
+            )
+        );
+    }
+
+    // Componente principale dell'app
+    function App() {
+        return React.createElement(
+            BrowserRouter,
+            null,
+            React.createElement(
+                'div',
+                null,
+                React.createElement(Navbar, null),
+                React.createElement(
+                    Switch,
+                    null,
+                    React.createElement(Route, { exact: true, path: '/react', component: EventList }),
+                    React.createElement(Route, { path: '/react/event/:eventCode', component: EventDetail })
+                ),
+                React.createElement(Footer, null)
+            )
+        );
+    }
+
+    var root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(React.createElement(App, null));
+
+  </script>
+</body>
+</html>

@@ -2,14 +2,16 @@
 {% block title %}Home{% endblock %}
 {% block content %}
 
+    <script src="/static/script/ecommerce.js" defer></script>
+
     <h1>Super Magnific Team</h1>
-    <h3>This our awsome fucking wonderful page.</h3>
+    <h3>Caricamento membri del team con file csv</h3>
 
      <div class="image-gallery">
         {% for member in team_members %}
         <div class="image-item">
             <img src="{{ url_for('static', filename=member.image)}}" alt={{ member.name }}>
-            <h2>{{ member.name }}</h2>
+            <h2> {{ member.name }} </h2>
             <p> {{ member.role }} </p>
             <p> {{ member.email }} </p>
         </div>

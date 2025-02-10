@@ -8,8 +8,6 @@ document.addEventListener("DOMContentLoaded", async function() {
     });
 
     let result = await response.json();
-    console.log("Dati ricevuti:", result);
-
     if(response.ok) {
         displayBooks("booksTable", result);
     }
